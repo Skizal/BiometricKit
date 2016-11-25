@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.pti.enrique.biometrickit.Login">
+
+    <android.support.v7.widget.Toolbar
+        android:id = "@+id/myToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:popupTheme="@style/Theme.AppCompat.DayNight"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:layout_marginTop="31dp"
+        android:id="@+id/userPass"
+        android:hint="@string/hintPassword"
+        android:layout_below="@+id/userName"
+        android:layout_alignStart="@+id/userName" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="78dp"
+        android:id="@+id/userName"
+        android:hint="@string/hintUserName"
+        android:selectAllOnFocus="false"
+        tools:ignore="RelativeOverlap"
+        android:layout_below="@+id/myToolbar"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Validate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vButton"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="109dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/code"
+        android:layout_below="@+id/userPass"
+        android:layout_alignStart="@+id/userPass"
+        android:layout_marginTop="30dp"
+        android:hint="Code" />
+
+</RelativeLayout>
