@@ -10,6 +10,8 @@ import android.widget.EditText;
 
 public class Validate extends AppCompatActivity {
     private EditText eCode;
+    private EditText eUser;
+    private EditText ePassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +20,8 @@ public class Validate extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         eCode = ( EditText ) findViewById(R.id.code );
+        eUser = ( EditText ) findViewById(R.id.userName );
+        ePassword = ( EditText ) findViewById(R.id.userPass );
         Button bValidate = ( Button ) findViewById( R.id.vButton );
         bValidate.setOnClickListener(
                 new View.OnClickListener(){
@@ -30,8 +34,10 @@ public class Validate extends AppCompatActivity {
     }
 
     private void valida(){
-        String sCode =  eCode.getText().toString();
-        NetworkManager.getInstance().validate(this, sCode);
+        String sCode = eCode.getText().toString();
+        String sUser = eUser.getText().toString();
+        String sPass = ePassword.getText().toString();
+        NetworkManager.getInstance().validate( this, sUser, sPass, "12345" );
     }
 
     public void toMain(){

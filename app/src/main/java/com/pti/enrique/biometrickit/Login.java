@@ -92,11 +92,12 @@ public class Login extends AppCompatActivity {
 
     public void toValidate(){
         Intent intent = new Intent( "com.pti.enrique.biometrickit.Validate" );
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity( intent );
     }
 
     public void toMain(){
-        Intent intent = new Intent( "com.pti.enrique.biometrickit.Main" );
+        Intent intent = new Intent("com.pti.enrique.biometrickit.Main");
         startActivity( intent );
     }
 
