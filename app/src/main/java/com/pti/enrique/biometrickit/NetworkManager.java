@@ -26,7 +26,7 @@ public class NetworkManager
     //for Volley API
     public RequestQueue requestQueue;
     private JSONObject user;
-    ArrayList<String> devices;
+    private ArrayList<String> devices;
     private String token;
 
     private NetworkManager(Context context)
@@ -362,10 +362,10 @@ public class NetworkManager
         requestQueue.add(request);
     }
 
-    public void validate( final Context con, String code )
+    public void validate( final Context con, String user, String password, String code )
     {
         String url = prefixURL + "validate";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, user,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.validate( user, password, code),
                 new Response.Listener<JSONObject>()
                 {
                     @Override
@@ -374,8 +374,9 @@ public class NetworkManager
                         boolean ok = false;
                         String error = "";
                         try {
+                            token = response.getString( "token" );
                             ok = response.getBoolean( "success" );
-                            error = response.getString( "message" );
+                            error = response.getString( "errorType" );
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
