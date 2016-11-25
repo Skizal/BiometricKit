@@ -61,9 +61,9 @@ public class Login extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick( View v ){
-
-                        token = user.getText().toString();
-                        //login();
+                        login();
+                        /*
+                        token = user.getText().toString():
                         if( token.equals( "admin" ) &&  password.getText().toString().equals( "admin" ) ){
                             Toast.makeText( Login.this, "Username and password are correct", Toast.LENGTH_SHORT ).show();
                             Intent intent = new Intent( "com.pti.enrique.biometrickit.Main" );
@@ -72,6 +72,7 @@ public class Login extends AppCompatActivity {
                         else {
                             Toast.makeText( Login.this, "Username and password are NOT correct", Toast.LENGTH_SHORT ).show();
                         }
+                        */
                     }
                 }
         );

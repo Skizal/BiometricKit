@@ -2,6 +2,7 @@ package com.pti.enrique.biometrickit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -49,8 +50,8 @@ public class SignUp extends AppCompatActivity {
                         if( sName.isEmpty() || sLastName.isEmpty() || sEmail.isEmpty() || sUserName.isEmpty() || sPassword.isEmpty() ){
                             Toast.makeText( SignUp.this, "Some fields are missing", Toast.LENGTH_SHORT ).show();
                         }
-                        else{
-                            NetworkManager.getInstance(SignUp.this).createUser( SignUp.this, sUserName, sPassword, sName, sLastName, sEmail );
+                        else {
+                            NetworkManager.getInstance(SignUp.this).createUser(SignUp.this, sUserName, sPassword, sName, sLastName, sEmail);
                         }
                     }
         });
@@ -75,7 +76,10 @@ public class SignUp extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        IBinder windowToken = getCurrentFocus().getWindowToken();
+        if( windowToken != null ) {
+            imm.hideSoftInputFromWindow(windowToken, 0);
+        }
         return true;
     }
 }
