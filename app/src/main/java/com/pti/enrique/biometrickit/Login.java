@@ -60,19 +60,25 @@ public class Login extends AppCompatActivity {
         loginButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
-                    public void onClick( View v ){
+                    public void onClick(View v) {
                         login();
-                        /*
-                        token = user.getText().toString():
-                        if( token.equals( "admin" ) &&  password.getText().toString().equals( "admin" ) ){
-                            Toast.makeText( Login.this, "Username and password are correct", Toast.LENGTH_SHORT ).show();
-                            Intent intent = new Intent( "com.pti.enrique.biometrickit.Main" );
-                            startActivity( intent );
+                    }
+                }
+        );
+        loginButton.setOnLongClickListener(
+                new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick (View v){
+                        token = user.getText().toString();
+                        if (token.equals("admin") && password.getText().toString().equals("admin")) {
+                            Toast.makeText(Login.this, "Username and password are correct", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent("com.pti.enrique.biometrickit.Main");
+                            startActivity(intent);
                         }
                         else {
-                            Toast.makeText( Login.this, "Username and password are NOT correct", Toast.LENGTH_SHORT ).show();
+                            Toast.makeText(Login.this, "Username and password are NOT correct", Toast.LENGTH_SHORT).show();
                         }
-                        */
+                        return true;
                     }
                 }
         );

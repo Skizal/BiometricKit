@@ -56,16 +56,15 @@ public class Pulse extends AppCompatActivity {
                 new DataPoint(5, 70),
                 new DataPoint(6, 72),
                 new DataPoint(7, 83),
-
         });
 
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(15);
+        graph.getViewport().setMaxX(24);
 
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(0);
-        graph.getViewport().setMaxY(100);
+        graph.getViewport().setMaxY(200);
 
         series.setColor( Color.RED );
         graph.addSeries(series);
