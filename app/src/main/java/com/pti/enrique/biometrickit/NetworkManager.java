@@ -96,21 +96,21 @@ public class NetworkManager
                     @Override
                     public void onResponse(JSONObject response)
                     {
+                        Main act = ( Main ) con;
                         boolean ok = false;
                         try {
                             ok = response.getBoolean( "ok" );
                             JSONArray devs = response.getJSONArray( "devices" );
                             if( ok ){
-                                devices = new ArrayList<>();
+                                act.resetDevices();
                                 for( int i = 0; i < devs.length(); ++i ){
-                                    devices.add( devs.getString( i ) );
+                                    act.updateDevices( devs.getString( i ) );
                                 }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Main act = ( Main ) con;
-                        act.updateRecyclerView( devices );
+                        act.updateRecyclerView( );
                     }
                 },
                 new Response.ErrorListener()
@@ -144,9 +144,9 @@ public class NetworkManager
                         }
                         if( ok ){
                             Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
-                            devices.add( id );
                             Main act = (Main) con;
-                            act.updateRecyclerView( devices );
+                            act.updateDevices( id );
+                            act.updateRecyclerView( );
                         }
                     }
                 },
@@ -181,9 +181,9 @@ public class NetworkManager
                         }
                         if( ok ){
                             Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
-                            devices.remove( id );
                             Main act = (Main) con;
-                            act.updateRecyclerView( devices );
+                            //act.deleteDevices( id );
+                            act.updateRecyclerView( );
                         }
                     }
                 },

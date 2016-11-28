@@ -28,7 +28,7 @@ public class Main extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<String> data;
+    public ArrayList<String> data;
 
 
 
@@ -42,21 +42,12 @@ public class Main extends AppCompatActivity {
         NetworkManager nm = NetworkManager.getInstance( this );
         setToolbar();
         setRecyclerView();
-        long startTime = System.currentTimeMillis();
-        /*
-        nm.getDevices();
-        while( !nm.devUpdated() ||  ( System.currentTimeMillis() - startTime ) < 5000 );
-        if( nm.devUpdated ){
-            updateRecyclerView( nm.getDevicesData() );
-            }
-        */
-
 
         ArrayList<String> data = new ArrayList<>();
         data.add( "Juan ");
         data.add( "Marta");
         data.add( "Herminia");
-        updateRecyclerView( data );
+        updateRecyclerView( );
     }
 
     private void setRecyclerView(){
@@ -65,7 +56,15 @@ public class Main extends AppCompatActivity {
         mRecyclerView.setLayoutManager( mLayoutManager );
     }
 
-    public void updateRecyclerView( ArrayList<String> data ){
+    public void updateDevices( String dev ){
+        data.add( dev );
+    }
+
+    public void resetDevices(){
+        data.clear();
+    }
+
+    public void updateRecyclerView(){
         mAdapter = new MyAdapter( data, this );
         mRecyclerView.setAdapter( mAdapter );
     }
@@ -93,18 +92,11 @@ public class Main extends AppCompatActivity {
             case R.id.action_refresh:
                 Toast.makeText(Main.this, "Information Updated", Toast.LENGTH_LONG ).show();
                 NetworkManager nm = NetworkManager.getInstance();
-                long startTime = System.currentTimeMillis();
-                /*
-                nm.getDevices();
-                while( !nm.devUpdated() ||  ( System.currentTimeMillis() - startTime ) < 5000 );
-                if( nm.devUpdated ){
-                    updateRecyclerView( nm.getDevicesData() );
-                    }
-                */
+                nm.getDevices( this );
                 return true;
 
             case R.id.action_logout:
-                super.onBackPressed();
+                super.finish();
                 return true;
 
             default:
