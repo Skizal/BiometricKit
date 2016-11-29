@@ -66,6 +66,11 @@
                         android:id="@+id/graph"
                         android:layout_marginBottom="130dp" />
 
+                    <Button
+                        android:text="Month"
+                        android:id="@+id/Switch"
+                        android:layout_width="40dp"
+                        android:layout_height="20dp" />
                 </LinearLayout>
 
             </FrameLayout>

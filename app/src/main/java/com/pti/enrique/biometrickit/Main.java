@@ -9,26 +9,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Timer;
+
 
 
 public class Main extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    public ArrayList<String> data;
+    private ArrayList<String> data;
 
 
 
@@ -39,11 +28,10 @@ public class Main extends AppCompatActivity {
     }
 
     private void iOnCreate(){
-        NetworkManager nm = NetworkManager.getInstance( this );
         setToolbar();
         setRecyclerView();
 
-        ArrayList<String> data = new ArrayList<>();
+        data = new ArrayList<>();
         data.add( "Juan ");
         data.add( "Marta");
         data.add( "Herminia");
