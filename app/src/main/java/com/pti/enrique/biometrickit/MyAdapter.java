@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -60,6 +61,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 //here should be the intent to the plot
             }
         });
+        holder.txtHeader.setOnLongClickListener(
+                new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick (View v){
+                        NetworkManager nm = NetworkManager.getInstance();
+                        nm.deleteDevice( mCon, name );
+                        return true;
+                    }
+                }
+        );
 
         holder.txtHeader.setText( mDataset.get(position) );
 

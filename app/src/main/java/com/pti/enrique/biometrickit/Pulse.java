@@ -62,12 +62,13 @@ public class Pulse extends AppCompatActivity {
             }
         });
 
-        TabHost host = (TabHost) findViewById(R.id.tabhost);
+
+        TabHost host = (TabHost) findViewById(R.id.tabHost);
         host.setup();
 
         //Tab 1
         TabHost.TabSpec spec = host.newTabSpec("Live");
-        spec.setContent(R.id.Live);
+        spec.setContent(R.id.RealTime);
         spec.setIndicator("Live");
         host.addTab(spec);
 

@@ -1,8 +1,10 @@
 package com.pti.enrique.biometrickit;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -15,6 +17,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class NetworkManager
@@ -57,11 +61,11 @@ public class NetworkManager
         user = JSONCreator.token( id, password );
     }
 
-
+    /*
     private void getToken( final Context con )
     {
         boolean ret = false;
-        String url = prefixURL + "this/request/suffix";
+        String url = prefixURL + "renewtoken";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, user,
                 new Response.Listener<JSONObject>()
                 {
@@ -85,12 +89,12 @@ public class NetworkManager
                 });
         requestQueue.add(request);
     }
+    */
 
     public void getDevices( final Context con )
     {
-        getToken( con );
         String url = prefixURL + "getdevicesfromuser";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.basic( token ),
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url , JSONCreator.basic( token ),
                 new Response.Listener<JSONObject>()
                 {
                     @Override
@@ -99,18 +103,23 @@ public class NetworkManager
                         Main act = ( Main ) con;
                         boolean ok = false;
                         try {
-                            ok = response.getBoolean( "ok" );
+                            ok = response.getBoolean( "success" );
                             JSONArray devs = response.getJSONArray( "devices" );
+                            String error = response.getString( "errorType" );
+
                             if( ok ){
                                 act.resetDevices();
                                 for( int i = 0; i < devs.length(); ++i ){
-                                    act.updateDevices( devs.getString( i ) );
+                                    act.updateDevices( devs.getJSONObject( i ).getString("deviceID") );
                                 }
+                                act.updateRecyclerView( );
+                            }
+                            else{
+                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        act.updateRecyclerView( );
                     }
                 },
                 new Response.ErrorListener()
@@ -120,15 +129,22 @@ public class NetworkManager
                     {
                         Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
                     }
-                });
+                })
+                    {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("x-access-token", token);
+                        return headers;
+                    }
+                };
         requestQueue.add(request);
     }
 
     public void addDevice( final Context con, final String id )
     {
-        getToken( con );
         String url = prefixURL + "adddevice";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.device( token, id ),
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, JSONCreator.device( token, id ),
                 new Response.Listener<JSONObject>()
                 {
                     @Override
@@ -148,6 +164,9 @@ public class NetworkManager
                             act.updateDevices( id );
                             act.updateRecyclerView( );
                         }
+                        else {
+                            Toast.makeText( con, error, Toast.LENGTH_SHORT ).show();
+                        }
                     }
                 },
                 new Response.ErrorListener()
@@ -163,9 +182,8 @@ public class NetworkManager
 
     public void deleteDevice( final Context con, final String id )
     {
-        getToken( con );
         String url = prefixURL + "deldevice";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.device( token, id ),
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, JSONCreator.device( token, id ),
                 new Response.Listener<JSONObject>()
                 {
                     @Override
@@ -182,8 +200,11 @@ public class NetworkManager
                         if( ok ){
                             Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
                             Main act = (Main) con;
-                            //act.deleteDevices( id );
+                            act.deleteDevice( id );
                             act.updateRecyclerView( );
+                        }
+                        else {
+                            Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
                         }
                     }
                 },
@@ -200,7 +221,6 @@ public class NetworkManager
 
     public void getMonth( final Context con, String month, String year, String id )
     {
-        getToken( con );
         String url = prefixURL + "this/request/suffix";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.month( token, year, month, id ),
                 new Response.Listener<JSONObject>()
@@ -222,9 +242,9 @@ public class NetworkManager
                 });
         requestQueue.add(request);
     }
+
     public void getDay( final Context con, String day, String month, String year, String id )
     {
-        getToken( con );
         String url = prefixURL + "this/request/suffix";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.day( token, year, month, day, id ),
                 new Response.Listener<JSONObject>()
@@ -288,11 +308,11 @@ public class NetworkManager
         requestQueue.add(request);
     }
 
-    public void deleteUser( final Context con )
+
+    public void deleteHistory( final Context con )
     {
-        getToken( con );
-        String url = prefixURL + "deleteuser";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.basic( token ),
+        String url = prefixURL + "deletehistory";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
                 new Response.Listener<JSONObject>()
                 {
                     @Override
@@ -314,7 +334,52 @@ public class NetworkManager
                     {
                         Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
                     }
-                });
+                })
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("x-access-token", token);
+                return headers;
+            }
+        };
+        requestQueue.add(request);
+    }
+
+    public void deleteUser( final Context con )
+    {
+        String url = prefixURL + "deleteuser";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        String res = "";
+                        try {
+                            res = response.getString( "message");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Toast.makeText( con, res , Toast.LENGTH_SHORT ).show();
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+                    }
+                })
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("x-access-token", token);
+                return headers;
+            }
+        };
         requestQueue.add(request);
     }
 
@@ -341,7 +406,7 @@ public class NetworkManager
                             act.toMain();
                         }
                         else {
-                            if( error.equals( "NotValidated" ) ){
+                            if( error.equals( "Notvalidated" ) ){
                                 Login act = (Login) con;
                                 act.toValidate();
                             }
@@ -365,7 +430,7 @@ public class NetworkManager
     public void validate( final Context con, String user, String password, String code )
     {
         String url = prefixURL + "validate";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.validate( user, password, code),
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, JSONCreator.validate( user, password, code),
                 new Response.Listener<JSONObject>()
                 {
                     @Override

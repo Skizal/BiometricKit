@@ -39,6 +39,17 @@ public final class JSONCreator {
         return userToken;
     }
 
+    public static JSONObject id( String id ){
+        JSONObject idj = new JSONObject();
+        try {
+            idj.put( "deviceID", id );
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return idj;
+    }
+
     public static JSONObject device( String token, String deviceID ){
         JSONObject device = new JSONObject();
         try {
@@ -53,7 +64,7 @@ public final class JSONCreator {
     public static JSONObject token( String id, String password ){
         JSONObject login = new JSONObject();
         try {
-            login.put( "user", id );
+            login.put( "id", id );
             login.put( "password", password );
         } catch (JSONException e) {
             e.printStackTrace();
@@ -64,7 +75,7 @@ public final class JSONCreator {
     public static JSONObject validate( String id, String password, String code ){
         JSONObject validate = new JSONObject();
         try {
-            validate.put( "user", id );
+            validate.put( "id", id );
             validate.put( "password", password );
             validate.put( "code", code );
         } catch (JSONException e) {

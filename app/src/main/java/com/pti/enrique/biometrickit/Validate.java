@@ -37,7 +37,7 @@ public class Validate extends AppCompatActivity {
         String sCode = eCode.getText().toString();
         String sUser = eUser.getText().toString();
         String sPass = ePassword.getText().toString();
-        NetworkManager.getInstance().validate( this, sUser, sPass, "12345" );
+        NetworkManager.getInstance().validate( this, sUser, sPass, sCode );
     }
 
     public void toMain(){

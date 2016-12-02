@@ -13,9 +13,6 @@
         android:title="@string/action_settings"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/action_add"
-        android:title="Add Device"
-        app:showAsAction="never"/>
 
     <item android:id="@+id/action_logout"
         android:title="@string/action_logout"

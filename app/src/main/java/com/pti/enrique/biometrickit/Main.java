@@ -8,6 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import java.util.ArrayList;
 
@@ -18,7 +22,8 @@ public class Main extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> data;
-
+    private EditText textDev;
+    private ImageButton addDev;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +36,27 @@ public class Main extends AppCompatActivity {
         setToolbar();
         setRecyclerView();
 
+        textDev = (EditText) findViewById(R.id.deviceText);
+        addDev = (ImageButton) findViewById(R.id.addButton);
+        addDev.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addDevice();
+                    }
+                }
+        );
+
         data = new ArrayList<>();
         data.add( "Juan ");
         data.add( "Marta");
         data.add( "Herminia");
         updateRecyclerView( );
+    }
+
+    private void addDevice(){
+        NetworkManager nm = NetworkManager.getInstance(this);
+        nm.addDevice( this, textDev.getText().toString() );
     }
 
     private void setRecyclerView(){
@@ -50,6 +71,10 @@ public class Main extends AppCompatActivity {
 
     public void resetDevices(){
         data.clear();
+    }
+
+    public void deleteDevice( String id ){
+        data.remove( id );
     }
 
     public void updateRecyclerView(){
@@ -78,8 +103,7 @@ public class Main extends AppCompatActivity {
                 return true;
 
             case R.id.action_refresh:
-                Toast.makeText(Main.this, "Information Updated", Toast.LENGTH_LONG ).show();
-                NetworkManager nm = NetworkManager.getInstance();
+                NetworkManager nm = NetworkManager.getInstance( this );
                 nm.getDevices( this );
                 return true;
 
