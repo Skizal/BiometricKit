@@ -29,14 +29,19 @@ public class Pulse extends AppCompatActivity {
     private Runnable mTimer2;
     private LineGraphSeries<DataPoint> seriesMonth;
     private LineGraphSeries<DataPoint> seriesDay;
+    private LineGraphSeries<DataPoint> seriesReal;
     private GraphView graph;
     private Button butt;
-    private double graph2LastXValue = 5;
+    private String id;
+    private int realIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pulse);
+
+        Intent intent = getIntent();
+        id = intent.getStringExtra( "id" );
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.myToolbar);
         myToolbar.setTitle("Heart Rate");
@@ -51,16 +56,10 @@ public class Pulse extends AppCompatActivity {
         butt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if( butt.getText().equals("Month") ){
-                    setMonthGraph();
-                    butt.setText( "Day" );
-                }
-                else{
-                    setDayGraph();
-                    butt.setText( "Month" );
-                }
+                getReal();
             }
         });
+        realIndex = 0;
 
 
         TabHost host = (TabHost) findViewById(R.id.tabHost);
@@ -102,7 +101,20 @@ public class Pulse extends AppCompatActivity {
 
         seriesDay = new LineGraphSeries<>();
 
-        setMonthGraph();
+        seriesReal = new LineGraphSeries<>();
+
+        setRealGraph();
+    }
+
+    private void getReal(){
+        NetworkManager nm = NetworkManager.getInstance(this);
+        nm.getReal( this, id);
+    }
+
+    public void updateReal( double data ){
+        seriesReal.appendData( new DataPoint( (double)realIndex , data ), true, 100 );
+        ++realIndex;
+        //graph.addSeries( seriesReal );
     }
 
     public void updateSeriesDay( ArrayList<Double> data ){
@@ -119,6 +131,14 @@ public class Pulse extends AppCompatActivity {
             seriesDay.appendData( new DataPoint( (double)i , data.get( i ) ), true, 30 );
         }
         setMonthGraph();
+    }
+
+    private void setRealGraph(){
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(100);
+
+        graph.addSeries( seriesReal );
     }
 
     private void setMonthGraph(){

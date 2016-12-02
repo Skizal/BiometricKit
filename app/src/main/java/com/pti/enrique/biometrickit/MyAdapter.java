@@ -57,6 +57,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent( mCon, Pulse.class);
+                intent.putExtra("id", name );
                 mCon.startActivity( intent );
                 //here should be the intent to the plot
             }

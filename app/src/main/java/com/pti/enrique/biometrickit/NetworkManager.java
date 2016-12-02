@@ -267,6 +267,57 @@ public class NetworkManager
         requestQueue.add(request);
     }
 
+    public void getReal( final Context con,  String id )
+    {
+        String url = prefixURL + "getrealtime";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url , JSONCreator.device( token, id ),
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        Pulse act = ( Pulse ) con;
+                        boolean ok = false;
+                        try {
+                            ok = response.getBoolean( "success" );
+                            JSONArray devs = response.getJSONArray( "records" );
+                            String error = response.getString( "errorType" );
+
+                            if( ok ){
+
+                                for( int i = 0; i < devs.length(); ++i ){
+                                    String dev = devs.getJSONObject( i ).getString("value");
+                                    act.updateReal(  Double.parseDouble( dev ) );
+                                }
+                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+                            }
+                            else{
+                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+                    }
+                })
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("x-access-token", token);
+                        return headers;
+                    }
+                };
+        requestQueue.add(request);
+    }
+
     public void createUser( final Context con, String id, String password, String name, String lastName, String email )
     {
         String url = prefixURL + "createuser";
