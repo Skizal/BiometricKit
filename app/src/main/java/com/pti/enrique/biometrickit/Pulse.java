@@ -1,8 +1,6 @@
 package com.pti.enrique.biometrickit;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,28 +8,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TabHost;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Pulse extends AppCompatActivity {
-    private final Handler mHandler = new Handler();
-    private Runnable mTimer2;
+    private final Handler handlerReal = new Handler();
+    private Runnable runReal;
     private LineGraphSeries<DataPoint> seriesMonth;
     private LineGraphSeries<DataPoint> seriesDay;
     private LineGraphSeries<DataPoint> seriesReal;
     private GraphView graph;
-    private Button butt;
+    private GraphView graphH;
+    private NetworkManager nm;
+    private Button bReal;
+    private Button bDay;
+    private Button bMonth;
+    private Spinner sDay;
+    private Spinner sMonth;
+    private Spinner sYear;
     private String id;
     private int realIndex;
 
@@ -46,20 +48,30 @@ public class Pulse extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.myToolbar);
         myToolbar.setTitle("Heart Rate");
         setSupportActionBar(myToolbar);
+        setSpinners();
+        setButtons();
+
+        realIndex = 0;
+
+        nm = NetworkManager.getInstance( this );
+
+        seriesMonth = new LineGraphSeries<>();
+
+        seriesDay = new LineGraphSeries<>();
+
+        seriesReal = new LineGraphSeries<>();
 
         graph = (GraphView) findViewById(R.id.graph);
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(0);
-        graph.getViewport().setMaxY(200);
+        graph.getViewport().setMaxY(140);
+        setRealGraph();
 
-        butt = (Button) findViewById(R.id.Switch);
-        butt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getReal();
-            }
-        });
-        realIndex = 0;
+        graphH = (GraphView) findViewById(R.id.graph2);
+        graphH.getViewport().setYAxisBoundsManual(true);
+        graphH.getViewport().setMinY(0);
+        graphH.getViewport().setMaxY(140);
+        setMonthGraph();
 
 
         TabHost host = (TabHost) findViewById(R.id.tabHost);
@@ -67,54 +79,99 @@ public class Pulse extends AppCompatActivity {
 
         //Tab 1
         TabHost.TabSpec spec = host.newTabSpec("Live");
-        spec.setContent(R.id.RealTime);
+        spec.setContent(R.id.realTime);
         spec.setIndicator("Live");
         host.addTab(spec);
 
         //Tab 2
         spec = host.newTabSpec("Historical");
-        spec.setContent(R.id.Historical);
+        spec.setContent(R.id.historical);
         spec.setIndicator("Historical");
         host.addTab(spec);
 
-        seriesMonth = new LineGraphSeries<>(new DataPoint[]{
-                new DataPoint(0, 83),
-                new DataPoint(1, 90),
-                new DataPoint(2, 86),
-                new DataPoint(3, 88),
-                new DataPoint(4, 76),
-                new DataPoint(5, 70),
-                new DataPoint(6, 72),
-                new DataPoint(7, 83),
-                new DataPoint(8, 83),
-                new DataPoint(9, 90),
-                new DataPoint(10, 86),
-                new DataPoint(11, 88),
-                new DataPoint(12, 76),
-                new DataPoint(13, 70),
-                new DataPoint(14, 72),
-                new DataPoint(15, 83),
+    }
+
+    private void setSpinners(){
+        Integer[] days = new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
+        Integer[] months = new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12};
+        Integer[] years = new Integer[]{2016, 2017};
+
+        sDay = (Spinner) findViewById(R.id.spinDay);
+        ArrayAdapter<Integer> adapterDay = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item, days);
+        sDay.setAdapter(adapterDay);
+
+        sMonth = (Spinner) findViewById(R.id.spinMonth);
+        ArrayAdapter<Integer> adapterMonth = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item, months);
+        sMonth.setAdapter(adapterMonth);
+
+        sYear = (Spinner) findViewById(R.id.spinYear);
+        ArrayAdapter<Integer> adapterYear = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item, years);
+        sYear.setAdapter(adapterYear);
+    }
+
+    private void setButtons(){
+        bDay = (Button) findViewById(R.id.buttonDay);
+        bDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String day, month, year;
+                day = sDay.getSelectedItem().toString();
+                month = sMonth.getSelectedItem().toString();
+                year = sYear.getSelectedItem().toString();
+                nm.getDay(getBaseContext(), day, month, year, id);
+            }
         });
-        seriesMonth.appendData(new DataPoint(16, 120), true, 16 );
+        bMonth = (Button) findViewById(R.id.buttonMonth);
+        bMonth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String month, year;
+                month = sMonth.getSelectedItem().toString();
+                year = sYear.getSelectedItem().toString();
+                nm.getMonth(getBaseContext(), month, year, id);
+            }
+        });
+        bReal = (Button) findViewById(R.id.getReal);
+        bReal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if( bReal.getText().toString().contains( "Start" ) ) {
+                    getReal();
+                    bReal.setText( "Stop Live");
+                }
+                else {
+                    handlerReal.removeCallbacks(runReal);
+                    bReal.setText( "Start Live");
+                    realIndex = 0;
+                    seriesReal = new LineGraphSeries<DataPoint>();
+                    graph.removeAllSeries();
+                    graph.addSeries( seriesReal );
+                }
 
-        seriesMonth.setColor( Color.RED );
-
-        seriesDay = new LineGraphSeries<>();
-
-        seriesReal = new LineGraphSeries<>();
-
-        setRealGraph();
+            }
+        });
     }
 
     private void getReal(){
-        NetworkManager nm = NetworkManager.getInstance(this);
-        nm.getReal( this, id);
+        runReal = new Runnable() {
+            @Override
+            public void run() {
+                nm.getReal( getBaseContext(), id);
+                handlerReal.postDelayed(this, 200);
+                /*
+                seriesReal.appendData( new DataPoint( (double)realIndex , 100 ), true, 100 );
+                ++realIndex;
+                */
+            }
+        };
+        handlerReal.postDelayed(runReal, 200);
     }
 
-    public void updateReal( double data ){
-        seriesReal.appendData( new DataPoint( (double)realIndex , data ), true, 100 );
-        ++realIndex;
-        //graph.addSeries( seriesReal );
+    public void updateReal( ArrayList<Double> data ){
+        for( int i = 0; i < data.size(); ++i ){
+            seriesReal.appendData( new DataPoint( (double)realIndex , data.get( i ) ), true, 100 );
+            ++realIndex;
+        }
     }
 
     public void updateSeriesDay( ArrayList<Double> data ){
@@ -142,19 +199,21 @@ public class Pulse extends AppCompatActivity {
     }
 
     private void setMonthGraph(){
-        graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(30);
+        graphH.getViewport().setXAxisBoundsManual(true);
+        graphH.getViewport().setMinX(0);
+        graphH.getViewport().setMaxX(30);
 
-        graph.addSeries( seriesMonth );
+        graphH.removeAllSeries();
+        graphH.addSeries( seriesMonth );
     }
 
     private void setDayGraph(){
-        graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(24);
+        graphH.getViewport().setXAxisBoundsManual(true);
+        graphH.getViewport().setMinX(0);
+        graphH.getViewport().setMaxX(24);
 
-        graph.addSeries( seriesDay );
+        graphH.removeAllSeries();
+        graphH.addSeries( seriesDay );
     }
 
     @Override
@@ -178,13 +237,6 @@ public class Pulse extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    double mLastRandom = 2;
-    Random mRand = new Random();
-
-    private double getRandom() {
-        return mLastRandom += mRand.nextDouble() * 0.5 - 0.25;
     }
 }
 

@@ -46,36 +46,132 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/Historical"
+                    android:id="@+id/historical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+
+                    <com.jjoe64.graphview.GraphView
+                        android:layout_width="match_parent"
+                        android:layout_height="285dip"
+                        android:id="@+id/graph2" />
+
+                    <TextView
+                        android:text="Date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:id="@+id/textView6" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="23dp">
+
+                        <TextView
+                            android:text="Day"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView9"
+                            android:layout_weight="1"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:text="Month"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView8"
+                            android:layout_weight="0.86"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:text="Year"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/TextView10"
+                            android:layout_weight="0.85"
+                            android:textAlignment="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="31dp">
+
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/spinDay"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="37dp"
+                            android:layout_alignTop="@+id/spinYear"
+                            android:layout_weight="1" />
+
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/spinMonth"
+                            android:layout_centerHorizontal="true"
+                            android:layout_alignTop="@+id/spinYear"
+                            android:layout_weight="1" />
+
+                        <Spinner
+                            android:layout_height="wrap_content"
+                            android:id="@+id/spinYear"
+                            android:layout_width="wrap_content"
+                            android:layout_marginStart="28dp"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_weight="1" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+
+                        <Button
+                            android:text="Day"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/buttonDay"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:text="Month"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/buttonMonth"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/realTime"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <com.jjoe64.graphview.GraphView
                         android:layout_width="match_parent"
-                        android:layout_height="200dip"
+                        android:layout_height="285dip"
                         android:id="@+id/graph" />
 
                     <Button
-                        android:text="Month"
+                        android:text="Start Live"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="15dp"
-                        android:id="@+id/Switch" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/RealTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="This is tab 2" />
+                        android:id="@+id/getReal" />
 
                 </LinearLayout>
 

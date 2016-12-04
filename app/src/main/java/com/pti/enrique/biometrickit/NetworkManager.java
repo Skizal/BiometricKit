@@ -221,15 +221,35 @@ public class NetworkManager
 
     public void getMonth( final Context con, String month, String year, String id )
     {
-        String url = prefixURL + "this/request/suffix";
+        String url = prefixURL + "getmonth";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.month( token, year, month, id ),
                 new Response.Listener<JSONObject>()
                 {
                     @Override
                     public void onResponse(JSONObject response)
                     {
-                        //call public static function activity and update
-                        //updateInfo( response )
+                        Pulse act = ( Pulse ) con;
+                        boolean ok = false;
+                        try {
+                            ok = response.getBoolean( "success" );
+                            JSONArray devs = response.getJSONArray( "records" );
+                            String error = response.getString( "errorType" );
+
+                            if( ok ){
+                                ArrayList<Double> month = new ArrayList<>();
+                                for( int i = 0; i < devs.length(); ++i ){
+                                    String dev = devs.getJSONObject( i ).getString("value");
+                                    month.add(  Double.parseDouble( dev ) );
+                                }
+                                act.updateSeriesMonth( month );
+                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+                            }
+                            else{
+                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener()
@@ -239,21 +259,49 @@ public class NetworkManager
                     {
                         Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
                     }
-                });
+                })
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("x-access-token", token);
+                return headers;
+            }
+        };
         requestQueue.add(request);
     }
 
     public void getDay( final Context con, String day, String month, String year, String id )
     {
-        String url = prefixURL + "this/request/suffix";
+        String url = prefixURL + "getday";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.day( token, year, month, day, id ),
                 new Response.Listener<JSONObject>()
                 {
                     @Override
                     public void onResponse(JSONObject response)
                     {
-                        //call public static function activity and update
-                        //updateInfo( response )
+                        Pulse act = ( Pulse ) con;
+                        boolean ok = false;
+                        try {
+                            ok = response.getBoolean( "success" );
+                            JSONArray devs = response.getJSONArray( "records" );
+                            String error = response.getString( "errorType" );
+
+                            if( ok ){
+                                ArrayList<Double> month = new ArrayList<>();
+                                for( int i = 0; i < devs.length(); ++i ){
+                                    String dev = devs.getJSONObject( i ).getString("value");
+                                    month.add(  Double.parseDouble( dev ) );
+                                }
+                                act.updateSeriesDay( month );
+                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+                            }
+                            else{
+                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener()
@@ -263,7 +311,15 @@ public class NetworkManager
                     {
                         Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
                     }
-                });
+                })
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("x-access-token", token);
+                        return headers;
+                    }
+                };
         requestQueue.add(request);
     }
 
@@ -284,11 +340,12 @@ public class NetworkManager
                             String error = response.getString( "errorType" );
 
                             if( ok ){
-
+                                ArrayList<Double> real = new ArrayList<>();
                                 for( int i = 0; i < devs.length(); ++i ){
                                     String dev = devs.getJSONObject( i ).getString("value");
-                                    act.updateReal(  Double.parseDouble( dev ) );
+                                    real.add(  Double.parseDouble( dev ) );
                                 }
+                                act.updateReal( real );
                                 Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
                             }
                             else{

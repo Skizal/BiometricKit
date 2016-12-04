@@ -89,7 +89,7 @@ public final class JSONCreator {
         try {
             jMonth.put( "token", token );
             jMonth.put( "year", year );
-            jMonth.put( "month", jMonth );
+            jMonth.put( "month", month );
             jMonth.put( "deviceID", deviceID );
         } catch (JSONException e) {
             e.printStackTrace();
