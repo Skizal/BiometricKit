@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,21 +115,16 @@ public class Pulse extends AppCompatActivity {
         bDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String day, month, year;
-                day = sDay.getSelectedItem().toString();
-                month = sMonth.getSelectedItem().toString();
-                year = sYear.getSelectedItem().toString();
-                nm.getDay(getBaseContext(), day, month, year, id);
+                graphH.removeAllSeries();
+                day();
             }
         });
         bMonth = (Button) findViewById(R.id.buttonMonth);
         bMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String month, year;
-                month = sMonth.getSelectedItem().toString();
-                year = sYear.getSelectedItem().toString();
-                nm.getMonth(getBaseContext(), month, year, id);
+                graphH.removeAllSeries();
+                month();
             }
         });
         bReal = (Button) findViewById(R.id.getReal);
@@ -140,6 +136,7 @@ public class Pulse extends AppCompatActivity {
                     bReal.setText( "Stop Live");
                 }
                 else {
+                    stopReal();
                     handlerReal.removeCallbacks(runReal);
                     bReal.setText( "Start Live");
                     realIndex = 0;
@@ -152,12 +149,37 @@ public class Pulse extends AppCompatActivity {
         });
     }
 
+    private void real(){
+        nm.getReal( this, id);
+        handlerReal.postDelayed(runReal, 200);
+    }
+
+    private void day(){
+        String day, month, year;
+        Integer monthe = (Integer)sMonth.getSelectedItem();
+        month = String.valueOf( monthe - 1 );
+        day = sDay.getSelectedItem().toString();
+        year = sYear.getSelectedItem().toString();
+        nm.getDay(this, day, month, year, id);
+    }
+
+    private void month(){
+        String month, year;
+        Integer monthe = (Integer)sMonth.getSelectedItem();
+        month = String.valueOf( monthe - 1 );
+        year = sYear.getSelectedItem().toString();
+        nm.getMonth(this, month, year, id);
+    }
+
+    private void stopReal(){
+        nm.stopReal( this, id );
+    }
+
     private void getReal(){
         runReal = new Runnable() {
             @Override
             public void run() {
-                nm.getReal( getBaseContext(), id);
-                handlerReal.postDelayed(this, 200);
+                real();
                 /*
                 seriesReal.appendData( new DataPoint( (double)realIndex , 100 ), true, 100 );
                 ++realIndex;
@@ -176,18 +198,20 @@ public class Pulse extends AppCompatActivity {
 
     public void updateSeriesDay( ArrayList<Double> data ){
         seriesDay = new LineGraphSeries<>();
-        for( int i = 0; i < 24; ++i ){
-            seriesDay.appendData( new DataPoint( (double)i , data.get( i ) ), true, 24 );
-        }
         setDayGraph();
+        seriesDay.appendData( new DataPoint( 0.0 , data.get( 23 ) ), true, 25 );
+        for( int i = 0; i < 24; ++i ){
+            seriesDay.appendData( new DataPoint( i+1 , data.get( i ) ), true, 25 );
+        }
     }
 
     public void updateSeriesMonth( ArrayList<Double> data ){
-        seriesDay = new LineGraphSeries<>();
-        for( int i = 0; i < 30; ++i ){
-            seriesDay.appendData( new DataPoint( (double)i , data.get( i ) ), true, 30 );
-        }
+        seriesMonth = new LineGraphSeries<>();
         setMonthGraph();
+        for( int i = 0; i < 30; ++i ){
+            seriesMonth.appendData( new DataPoint( i , data.get( i ) ), true, 32 );
+        }
+
     }
 
     private void setRealGraph(){
@@ -203,16 +227,14 @@ public class Pulse extends AppCompatActivity {
         graphH.getViewport().setMinX(0);
         graphH.getViewport().setMaxX(30);
 
-        graphH.removeAllSeries();
         graphH.addSeries( seriesMonth );
     }
 
     private void setDayGraph(){
         graphH.getViewport().setXAxisBoundsManual(true);
         graphH.getViewport().setMinX(0);
-        graphH.getViewport().setMaxX(24);
+        graphH.getViewport().setMaxX(25);
 
-        graphH.removeAllSeries();
         graphH.addSeries( seriesDay );
     }
 

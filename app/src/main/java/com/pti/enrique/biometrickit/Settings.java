@@ -41,7 +41,7 @@ public class Settings extends AppCompatActivity {
 
     private void modifyUser(){
         NetworkManager nm = NetworkManager.getInstance( this );
-        //nm.modifySettings( name, lastName, email, password, passwordNew);
+        nm.updateUser( this, password.getText().toString(), name.getText().toString(), lastName.getText().toString(), email.getText().toString() );
     }
 
     private void setToolbar(){

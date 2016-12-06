@@ -48,10 +48,15 @@ public class Main extends AppCompatActivity {
         );
 
         data = new ArrayList<>();
+        /*
         data.add( "Juan ");
         data.add( "Marta");
         data.add( "Herminia");
         updateRecyclerView( );
+        */
+
+        NetworkManager nm = NetworkManager.getInstance( this );
+        nm.getDevices( this );
     }
 
     private void addDevice(){

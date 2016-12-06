@@ -222,7 +222,7 @@ public class NetworkManager
     public void getMonth( final Context con, String month, String year, String id )
     {
         String url = prefixURL + "getmonth";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.month( token, year, month, id ),
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, JSONCreator.month( token, year, month, id ),
                 new Response.Listener<JSONObject>()
                 {
                     @Override
@@ -238,8 +238,7 @@ public class NetworkManager
                             if( ok ){
                                 ArrayList<Double> month = new ArrayList<>();
                                 for( int i = 0; i < devs.length(); ++i ){
-                                    String dev = devs.getJSONObject( i ).getString("value");
-                                    month.add(  Double.parseDouble( dev ) );
+                                    month.add( Double.parseDouble( devs.get( i ).toString() ) );
                                 }
                                 act.updateSeriesMonth( month );
                                 Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
@@ -274,7 +273,7 @@ public class NetworkManager
     public void getDay( final Context con, String day, String month, String year, String id )
     {
         String url = prefixURL + "getday";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, JSONCreator.day( token, year, month, day, id ),
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, JSONCreator.day( token, year, month, day, id ),
                 new Response.Listener<JSONObject>()
                 {
                     @Override
@@ -290,8 +289,7 @@ public class NetworkManager
                             if( ok ){
                                 ArrayList<Double> month = new ArrayList<>();
                                 for( int i = 0; i < devs.length(); ++i ){
-                                    String dev = devs.getJSONObject( i ).getString("value");
-                                    month.add(  Double.parseDouble( dev ) );
+                                    month.add( Double.parseDouble( devs.get( i ).toString() ));
                                 }
                                 act.updateSeriesDay( month );
                                 Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
@@ -373,6 +371,46 @@ public class NetworkManager
                     }
                 };
         requestQueue.add(request);
+    }
+
+    public void stopReal( final Context con, String id ){
+        {
+            String url = prefixURL + "logout";
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url , JSONCreator.device( token, id ),
+                    new Response.Listener<JSONObject>()
+                    {
+                        @Override
+                        public void onResponse(JSONObject response)
+                        {
+                            Pulse act = ( Pulse ) con;
+                            try {
+                                String error = response.getString( "errorType" );
+                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error)
+                        {
+                            Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+                        }
+                    })
+            {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("x-access-token", token);
+                    return headers;
+                }
+            };
+            requestQueue.add(request);
+        }
+
     }
 
     public void createUser( final Context con, String id, String password, String name, String lastName, String email )
@@ -573,8 +611,38 @@ public class NetworkManager
         requestQueue.add(request);
     }
 
-    public void logout( )
+    public void updateUser( final Context con, String password, String userName, String lastName, String email )
     {
+        String url = prefixURL + "updateinfo";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, JSONCreator.dataUser( password, userName, lastName, email ),
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        boolean ok = false;
+                        String error = "";
+                        try {
+                            ok = response.getBoolean( "success" );
+                            error = response.getString( "errorType" );
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Toast.makeText( con, error, Toast.LENGTH_SHORT ).show();
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+                    }
+                });
+        requestQueue.add(request);
+    }
+
+    public void logout() {
         user = null;
     }
 }

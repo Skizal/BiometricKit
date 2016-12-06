@@ -111,4 +111,18 @@ public final class JSONCreator {
         return jDay;
     }
 
+    public static JSONObject dataUser( String password, String name, String lastName, String email ){
+        JSONObject newUser = new JSONObject();
+        try {
+            newUser.put( "password", password );
+            newUser.put( "name", name );
+            newUser.put( "lastName", lastName );
+            newUser.put( "email", email );
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return newUser;
+    }
+
 }
