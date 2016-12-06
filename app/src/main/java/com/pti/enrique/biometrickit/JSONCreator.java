@@ -116,7 +116,7 @@ public final class JSONCreator {
         try {
             newUser.put( "password", password );
             newUser.put( "name", name );
-            newUser.put( "lastName", lastName );
+            newUser.put( "lastname", lastName );
             newUser.put( "email", email );
 
         } catch (JSONException e) {

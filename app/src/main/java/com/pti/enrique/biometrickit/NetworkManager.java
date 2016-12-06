@@ -638,8 +638,71 @@ public class NetworkManager
                     {
                         Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
                     }
-                });
+                })
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("x-access-token", token);
+                        return headers;
+                    }
+                };
         requestQueue.add(request);
+    }
+
+    public void getUser( final Context con )
+    {
+        String url = prefixURL + "user";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, JSONCreator.basic( token ),
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        boolean ok = false;
+                        String error = "";
+                        Settings act = ( Settings ) con;
+
+                        try {
+                            ok = response.getBoolean( "success" );
+                            JSONArray dataUser = response.getJSONArray( "info" );
+
+                            if( ok ){
+                                ArrayList<Double> real = new ArrayList<>();
+                                String name = dataUser.getJSONObject( 0 ).getString("name");
+                                String lastName = dataUser.getJSONObject( 0 ).getString("lastname");
+                                String email = dataUser.getJSONObject( 0 ).getString("email");
+                                String password = dataUser.getJSONObject( 0 ).getString("password");
+
+                                act.setEdits(name, lastName, email, password);
+                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+                            }
+                            else{
+                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+                    }
+                })
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("x-access-token", token);
+                        return headers;
+                    }
+                };
+                requestQueue.add(request);
     }
 
     public void logout() {

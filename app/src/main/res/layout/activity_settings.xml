@@ -41,10 +41,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:id="@+id/textView"
-                android:layout_weight="1.60" />
+                android:layout_weight="1.83" />
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
@@ -68,7 +68,7 @@
                 android:layout_gravity="center"/>
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
@@ -93,7 +93,7 @@
                 android:layout_gravity="center"/>
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:ems="10"
@@ -110,46 +110,21 @@
             android:layout_gravity="center">
 
             <TextView
-                android:text="Password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView4"
-                android:layout_weight="1"
-                android:layout_gravity="center"/>
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:id="@+id/editPassword"
-                android:layout_weight="1"
-                android:layout_gravity="center"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_gravity="center">
-
-            <TextView
                 android:text="New Password"
-                android:layout_width="99dp"
+                android:layout_width="83dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView5"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:layout_weight="0.17" />
 
             <EditText
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
                 android:id="@+id/editPassword1"
-                android:layout_weight="1"
+                android:layout_weight="0.59"
                 android:layout_gravity="center"
-                android:hint="My new password is..." />
+                android:layout_width="200dp" />
 
         </LinearLayout>
 

@@ -1,6 +1,8 @@
 package com.pti.enrique.biometrickit;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,7 +56,6 @@ public class Main extends AppCompatActivity {
         data.add( "Herminia");
         updateRecyclerView( );
         */
-
         NetworkManager nm = NetworkManager.getInstance( this );
         nm.getDevices( this );
     }
@@ -123,6 +124,7 @@ public class Main extends AppCompatActivity {
 
         }
     }
+
 
     @Override
     public void onBackPressed(){

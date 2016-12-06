@@ -115,7 +115,6 @@ public class Pulse extends AppCompatActivity {
         bDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                graphH.removeAllSeries();
                 day();
             }
         });
@@ -123,7 +122,6 @@ public class Pulse extends AppCompatActivity {
         bMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                graphH.removeAllSeries();
                 month();
             }
         });
@@ -144,14 +142,13 @@ public class Pulse extends AppCompatActivity {
                     graph.removeAllSeries();
                     graph.addSeries( seriesReal );
                 }
-
             }
         });
     }
 
     private void real(){
         nm.getReal( this, id);
-        handlerReal.postDelayed(runReal, 200);
+        handlerReal.postDelayed(runReal, 300);
     }
 
     private void day(){
@@ -186,7 +183,7 @@ public class Pulse extends AppCompatActivity {
                 */
             }
         };
-        handlerReal.postDelayed(runReal, 200);
+        handlerReal.postDelayed(runReal, 300);
     }
 
     public void updateReal( ArrayList<Double> data ){
@@ -197,20 +194,24 @@ public class Pulse extends AppCompatActivity {
     }
 
     public void updateSeriesDay( ArrayList<Double> data ){
-        seriesDay = new LineGraphSeries<>();
-        setDayGraph();
-        seriesDay.appendData( new DataPoint( 0.0 , data.get( 23 ) ), true, 25 );
-        for( int i = 0; i < 24; ++i ){
-            seriesDay.appendData( new DataPoint( i+1 , data.get( i ) ), true, 25 );
+        graphH.removeAllSeries();
+        DataPoint[] dataP = new DataPoint[24];
+        dataP[0] = new DataPoint( 0, data.get( 23 ) );
+        for( int i = 0; i < 23; ++i ){
+            dataP[i+1] =  new DataPoint( i+1 , data.get( i ) );
         }
+        seriesDay = new LineGraphSeries<>( dataP );
+        setDayGraph();
     }
 
     public void updateSeriesMonth( ArrayList<Double> data ){
-        seriesMonth = new LineGraphSeries<>();
-        setMonthGraph();
-        for( int i = 0; i < 30; ++i ){
-            seriesMonth.appendData( new DataPoint( i , data.get( i ) ), true, 32 );
+        graphH.removeAllSeries();
+        DataPoint[] dataP = new DataPoint[31];
+        for( int i = 0; i < 31; ++i ){
+            dataP[i] =  new DataPoint( i+1 , data.get( i ) );
         }
+        seriesMonth = new LineGraphSeries<>( dataP );
+        setMonthGraph();
 
     }
 
@@ -224,8 +225,8 @@ public class Pulse extends AppCompatActivity {
 
     private void setMonthGraph(){
         graphH.getViewport().setXAxisBoundsManual(true);
-        graphH.getViewport().setMinX(0);
-        graphH.getViewport().setMaxX(30);
+        graphH.getViewport().setMinX(1);
+        graphH.getViewport().setMaxX(32);
 
         graphH.addSeries( seriesMonth );
     }
@@ -233,7 +234,7 @@ public class Pulse extends AppCompatActivity {
     private void setDayGraph(){
         graphH.getViewport().setXAxisBoundsManual(true);
         graphH.getViewport().setMinX(0);
-        graphH.getViewport().setMaxX(25);
+        graphH.getViewport().setMaxX(23);
 
         graphH.addSeries( seriesDay );
     }
