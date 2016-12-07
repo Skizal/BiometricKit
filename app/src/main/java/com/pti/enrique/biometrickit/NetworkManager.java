@@ -115,7 +115,7 @@ public class NetworkManager
                                 act.updateRecyclerView( );
                             }
                             else{
-                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -127,7 +127,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+                        Toast.makeText( con, "Server offline", Toast.LENGTH_SHORT ).show();
                     }
                 })
                     {
@@ -174,7 +174,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+
                     }
                 });
         requestQueue.add(request);
@@ -198,13 +198,11 @@ public class NetworkManager
                             e.printStackTrace();
                         }
                         if( ok ){
-                            Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
                             Main act = (Main) con;
                             act.deleteDevice( id );
                             act.updateRecyclerView( );
                         }
                         else {
-                            Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
                         }
                     }
                 },
@@ -213,7 +211,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+
                     }
                 });
         requestQueue.add(request);
@@ -241,11 +239,9 @@ public class NetworkManager
                                     month.add( Double.parseDouble( devs.get( i ).toString() ) );
                                 }
                                 act.updateSeriesMonth( month );
-                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+
                             }
-                            else{
-                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
-                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -256,7 +252,6 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
                     }
                 })
         {
@@ -292,11 +287,9 @@ public class NetworkManager
                                     month.add( Double.parseDouble( devs.get( i ).toString() ));
                                 }
                                 act.updateSeriesDay( month );
-                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+
                             }
-                            else{
-                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
-                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -307,7 +300,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+
                     }
                 })
                 {
@@ -344,10 +337,8 @@ public class NetworkManager
                                     real.add(  Double.parseDouble( dev ) );
                                 }
                                 act.updateReal( real );
-                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
                             }
                             else{
-                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -359,7 +350,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+
                     }
                 })
                 {
@@ -448,7 +439,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                            Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+                            Toast.makeText( con, "Server offline", Toast.LENGTH_SHORT ).show();
                     }
                 });
         requestQueue.add(request);
@@ -478,7 +469,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+
                     }
                 })
         {
@@ -515,7 +506,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+
                     }
                 })
         {
@@ -567,7 +558,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+                        Toast.makeText( con, "Server offline", Toast.LENGTH_SHORT ).show();
                     }
                 });
         requestQueue.add(request);
@@ -596,7 +587,7 @@ public class NetworkManager
                             v.toMain();
                         }
                         else {
-                            Toast.makeText( con, error, Toast.LENGTH_SHORT ).show();
+                            Toast.makeText( con, "Code or Password wrong", Toast.LENGTH_SHORT ).show();
                         }
                     }
                 },
@@ -605,7 +596,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+
                     }
                 });
         requestQueue.add(request);
@@ -625,10 +616,13 @@ public class NetworkManager
                         try {
                             ok = response.getBoolean( "success" );
                             error = response.getString( "errorType" );
+                            if( ok ){
+                                Toast.makeText( con, "Information updated", Toast.LENGTH_SHORT ).show();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Toast.makeText( con, error, Toast.LENGTH_SHORT ).show();
+
                     }
                 },
                 new Response.ErrorListener()
@@ -636,7 +630,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+
                     }
                 })
                 {
@@ -668,17 +662,15 @@ public class NetworkManager
                             JSONArray dataUser = response.getJSONArray( "info" );
 
                             if( ok ){
-                                ArrayList<Double> real = new ArrayList<>();
                                 String name = dataUser.getJSONObject( 0 ).getString("name");
                                 String lastName = dataUser.getJSONObject( 0 ).getString("lastname");
                                 String email = dataUser.getJSONObject( 0 ).getString("email");
                                 String password = dataUser.getJSONObject( 0 ).getString("password");
 
                                 act.setEdits(name, lastName, email, password);
-                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
                             }
                             else{
-                                Toast.makeText( con, error , Toast.LENGTH_SHORT ).show();
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -691,7 +683,7 @@ public class NetworkManager
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        Toast.makeText( con, "Error communicating with the server", Toast.LENGTH_SHORT ).show();
+                        Toast.makeText( con, "Server offline", Toast.LENGTH_SHORT ).show();
                     }
                 })
                 {
