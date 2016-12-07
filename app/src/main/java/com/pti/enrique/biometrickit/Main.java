@@ -25,7 +25,7 @@ public class Main extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> data;
     private EditText textDev;
-    private ImageButton addDev;
+    private Button addDev;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class Main extends AppCompatActivity {
         setRecyclerView();
 
         textDev = (EditText) findViewById(R.id.deviceText);
-        addDev = (ImageButton) findViewById(R.id.addButton);
+        addDev = (Button) findViewById(R.id.addButton);
         addDev.setOnClickListener(
                 new View.OnClickListener() {
                     @Override

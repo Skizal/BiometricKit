@@ -27,10 +27,10 @@
         android:layout_height="440dp"
         android:layout_below="@+id/myToolbar" />
 
-    <ImageButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_menu_add"
+        android:text="ADD"
         android:id="@+id/addButton"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/deviceText"
